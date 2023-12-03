@@ -1,18 +1,46 @@
 #include <iostream>
+#include <conio.h>
 using namespace std;
 void printBoard(char[][3]);
 void registerMove(char[][3], char, string);
 bool isFreeSpace(char[][3], string move);
+void switchPlayer(char &player);
 bool checkRows(char[][3], char);
 bool checkColumns(char[][3], char);
 bool checkDiagonals(char[][3], char);
-bool isWinner(char, char[][3]);
+bool isWinner(char[][3], char);
 int main()
 {
+    char board[3][3] = {
+        {' ', ' ', ' '},
+        {' ', ' ', ' '},
+        {' ', ' ', ' '},
+    };
+    char player = 'X';
+    string move;
+    int count = 9;
+    while (count != 0)
+    {
+        cout << "It's player " << player << "'s turn.";
+        printBoard(board);
+        cout << "Enter your move: ";
+        cin >> move;
+        if (isFreeSpace(board, move))
+        {
+            registerMove(board,player,move);
+            switchPlayer(player);  
+        }
+        else{
+            cout<<"The box is already taken\nPress any key to try again...............";
+            getch();
+            continue;
+        }
+    }
 }
 
 void printBoard(char board[][3])
 {
+    system("clear");
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -37,6 +65,17 @@ bool isFreeSpace(char board[][3], string move)
     }
 }
 
+void switchPlayer(char &player)
+{
+    if (player == 'X')
+    {
+        player = 'O';
+    }
+    else
+    {
+        player = 'X';
+    }
+}
 void registerMove(char board[][3], char player, string move)
 {
     int row = move[0] - 'A';
