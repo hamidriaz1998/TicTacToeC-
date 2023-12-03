@@ -3,6 +3,7 @@
 using namespace std;
 void printBoard(char[][3]);
 void registerMove(char[][3], char, string);
+bool isOutOfBounds(string move);
 bool isFreeSpace(char[][3], string move);
 void switchPlayer(char &player);
 bool checkRows(char[][3], char);
@@ -21,33 +22,64 @@ int main()
     int count = 9;
     while (count != 0)
     {
-        cout << "It's player " << player << "'s turn.";
         printBoard(board);
-        cout << "Enter your move: ";
+        cout << "It's player " << player << "'s turn." << endl;
+        cout << "Enter your move (e.g A1,B3 etc): ";
         cin >> move;
-        if (isFreeSpace(board, move))
+        if (isOutOfBounds(move))
         {
-            registerMove(board,player,move);
-            switchPlayer(player);  
-        }
-        else{
-            cout<<"The box is already taken\nPress any key to try again...............";
+            cout << "Invalid move\nPress any key to try again...................";
             getch();
             continue;
         }
+        if (isFreeSpace(board, move))
+        {
+            registerMove(board, player, move);
+        }
+        else
+        {
+            cout << "The box is already taken\nPress any key to try again...............";
+            getch();
+            continue;
+        }
+        if (isWinner(board, player))
+        {
+            printBoard(board);
+            cout << "Player " << player << " has won the game";
+            break;
+        }
+        switchPlayer(player);
+        count--;
+    }
+    if (count == 0)
+    {
+        printBoard(board);
+        cout << "It's a tie.";
     }
 }
 
 void printBoard(char board[][3])
 {
-    system("clear");
-    for (int i = 0; i < 3; i++)
+    system("cls");
+    cout << "   1   2   3" << endl;
+    cout << "A  " << board[0][0] << " | " << board[0][1] << " | " << board[0][2] << endl;
+    cout << "  ---+---+---" << endl;
+    cout << "B  " << board[1][0] << " | " << board[1][1] << " | " << board[1][2] << endl;
+    cout << "  ---+---+---" << endl;
+    cout << "C  " << board[2][0] << " | " << board[2][1] << " | " << board[2][2] << endl;
+}
+
+bool isOutOfBounds(string move)
+{
+    int row = move[0] - 'A';
+    int column = move[1] - '1';
+    if (row < 0 || row > 2 || column < 0 || column > 2)
     {
-        for (int j = 0; j < 3; j++)
-        {
-            cout << board[i][j] << "\t";
-        }
-        cout << endl;
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
